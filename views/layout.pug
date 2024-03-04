@@ -1,0 +1,22 @@
+doctype html
+html
+  head
+    title #{title}
+  body
+    if isAuthenticated
+      span Welcome #{user.nickname}
+      div
+        a(href='/') Dashboard 
+        span • 
+        a(href='/profile') Profile 
+        span • 
+        a(href='/logout') Logout
+    else
+      a(href='/login') Login
+    
+    hr(size=1,noshade=true)
+
+    block content 
+
+    hr(style="margin-top:150px;",size=1,noshade=true)
+    span &copy; 2024 TechnoTablet Global Solutions LLP, OAuth2 Testing

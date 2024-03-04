@@ -1,0 +1,7 @@
+extends ./layout.pug 
+
+block content
+  h2 User Profile
+  img(align="right",src=`${user.picture}`)
+
+  pre #{JSON.stringify(user, null, 2)}
