@@ -14,6 +14,8 @@ block content
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
+                        'Authorization': 'Bearer #{accessToken}'
+                        //- 'Authorization': 'Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6ImhPdndzb0N5S3FXaXNwcGNrMUgxRiJ9.eyJpc3MiOiJodHRwczovL2Rldi16aGd5ZnJobWs2NTd1YXR4LnVzLmF1dGgwLmNvbS8iLCJzdWIiOiJhdXRoMHw2NWRiZjhiYTQyYmRhMGFhZTMzNTdkZGEiLCJhdWQiOlsiaHR0cDovL2xvY2FsaG9zdDozMDAwLyoiLCJodHRwczovL2Rldi16aGd5ZnJobWs2NTd1YXR4LnVzLmF1dGgwLmNvbS91c2VyaW5mbyJdLCJpYXQiOjE3MDk3OTA4ODAsImV4cCI6MTcwOTg3NzI4MCwiYXpwIjoic3RSU1FOM2ZtQ0FGcnVpVm5UT1JWMGJHbGNMV1pOZ2MiLCJzY29wZSI6Im9wZW5pZCBwcm9maWxlIGVtYWlsIn0.D5vauj8CONpPraPHkbmMDpbQG1GkgJ8W4gijTrtF3xjR5zAT6R-JEiT3e67z5ulwFD-wkFUOv8qfuY77BwmNNXP_0tgKyk-TMako6KfvT7h-ozP7bacmYp9102XTnBhUDAQmdPjO_DLsn173navBMbZzOJy_YVqMk8y1237va1CqPhAzjzepJecq8bqqYSjNRlcSRhm2oD7RfHgLf8OFaDNnZ4YDKeG82-DjmTjGFN0z1bTa1U9kLMzm6Nm7IVdFgIMDaPZFMfE3sUyYBTS4Y6rALHRxhE3m_eFfSbZDPXfDD4T02sWfox_aE7wqG0enfOv1ESkKMgGaBytx-pgh3g'
                         // Include other headers as needed, like Authorization for JWTs
                     },
                     body: JSON.stringify({ type, amount, note }),

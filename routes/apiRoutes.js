@@ -1,9 +1,14 @@
 const express = require('express');
 const router = express.Router();
-const { requiresAuth } = require('express-openid-connect');
+const checkJwt = require('../util/jwtAuth');
+const fs = require('fs');
+const path = require('path');
+
+// Path to the transactions file (the database)
+const transactionsFilePath = path.join(__dirname, '../transactions.txt');
 
 // Define API routes
-router.post('/transactions/add', requiresAuth(), (req, res) => {
+router.post('/transactions/add', checkJwt, (req, res) => {
     const transactionData = req.body;
     const transactionString = JSON.stringify(transactionData);
 

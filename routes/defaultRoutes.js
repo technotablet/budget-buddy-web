@@ -15,7 +15,9 @@ router.get('/profile', requiresAuth(), (req, res) => {
 });
 
 router.get('/add', requiresAuth(), (req, res) => {
-    res.render('add.pug', { title: "Add Transaction", isAuthenticated: req.oidc.isAuthenticated(), user: req.oidc.user });
+    let accessToken = req.oidc.accessToken;
+    accessToken = accessToken.access_token;
+    res.render('add.pug', { title: "Add Transaction", accessToken: accessToken, isAuthenticated: req.oidc.isAuthenticated(), user: req.oidc.user });
 });
 
 // Export the router
