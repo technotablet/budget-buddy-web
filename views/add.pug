@@ -1,0 +1,48 @@
+extends ./layout.pug
+
+block content
+    h2 Add Transaction
+    script.
+        document.addEventListener('DOMContentLoaded', function () {
+            document.getElementById('transactionForm').addEventListener('submit', function (e) {
+                e.preventDefault();
+                const type = document.getElementById('type').value;
+                const amount = +document.getElementById('amount').value;
+                const note = document.getElementById('note').value;
+
+                fetch('/api/transactions/add', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        // Include other headers as needed, like Authorization for JWTs
+                    },
+                    body: JSON.stringify({ type, amount, note }),
+                })
+                    .then(async response => {
+                        if (!response.ok) {
+                            const errorData = await response.json(); // Get error data from the response
+                            throw new Error(`Network response was not ok. Status: ${response.status}, Message: ${errorData.message || 'Unknown error'}`); // Custom error with message
+                        }
+
+                        return response.json();
+                    })
+                    .then(data => {
+                        console.log(data);
+                        alert("Transaction added!\nRedirecting to Dashboard");
+                        // Redirect or update UI as needed
+                        window.location.href="/";
+                    })
+                    .catch((error) => {
+                        console.error('Error:', error);
+                        alert(error);
+                    });
+            });
+        });
+
+    form#transactionForm
+        select#type
+            option(value="income") Income
+            option(value="expense") Expense
+        input#amount(type="number" placeholder="Amount")
+        input#note(type="text" placeholder="Note")
+        button(type="submit") Add Transaction

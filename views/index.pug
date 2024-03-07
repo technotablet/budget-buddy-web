@@ -2,3 +2,6 @@ extends ./layout.pug
 
 block content 
   h2 Dashboard
+  if isAuthenticated 
+    a(href="/add") Add Transaction 
+    p stuff
