@@ -10,7 +10,9 @@ const transactionsFilePath = path.join(__dirname, '../transactions.txt');
 // Define API routes
 router.post('/transactions/add', checkJwt, (req, res) => {
     const transactionData = req.body;
-    const transactionString = JSON.stringify(transactionData);
+    const userId = req.auth && req.auth.sub; // 'sub' is a common field for user identifier in JWTs
+    // Generate a timestamp
+    const timestamp = new Date().toISOString();
 
     // Extracting fields from the request body
     const { type, amount, note } = transactionData;
@@ -29,6 +31,16 @@ router.post('/transactions/add', checkJwt, (req, res) => {
     if (typeof note !== 'string' || note.trim().length === 0) {
         return res.status(400).send({ message: "Invalid or missing 'note'. Must be a non-empty string." });
     }
+
+    // Modify the transaction data to include userId and timestamp
+    const enrichedTransactionData = {
+        ...transactionData,
+        userId, // Append the user identifier
+        timestamp // Append the timestamp
+    };
+
+    // Convert to string for saving
+    const transactionString = JSON.stringify(enrichedTransactionData);
 
     // Append the transaction data to the file, each transaction on a new line
     fs.appendFile(transactionsFilePath, transactionString + '\n', (err) => {
