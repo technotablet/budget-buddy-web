@@ -52,5 +52,39 @@ router.post('/transactions/add', checkJwt, (req, res) => {
         res.status(201).send({ message: "Transaction added successfully", transaction: req.body });
     });
 });
+
+router.get('/transactions/list', checkJwt, (req, res) => {
+    const userId = req.auth && req.auth.sub; // Assuming user ID is in req.auth.sub
+    const { type, month } = req.query; // Optional filters: type and month
+
+    // Read the transactions file
+    fs.readFile(transactionsFilePath, { encoding: 'utf8' }, (err, data) => {
+        if (err) {
+            console.error('Failed to read transactions:', err);
+            return res.status(500).send({ message: "Failed to retrieve transactions" });
+        }
+
+        // Split the file content by new line to get each transaction as an element in an array
+        const transactions = data.trim().split('\n')
+            .map(line => JSON.parse(line)) // Parse each line as JSON
+            .filter(transaction => transaction.userId === userId) // Filter transactions by userId
+            .filter(transaction => {
+                // Apply optional filters if they are provided
+                if (type && transaction.type !== type) {
+                    return false; // Filter by type if specified
+                }
+                if (month) {
+                    const transactionMonth = new Date(transaction.timestamp).getMonth() + 1;
+                    const filterMonth = parseInt(month, 10);
+                    return transactionMonth === filterMonth; // Filter by month if specified
+                }
+                return true; // Include transaction if no type or month filter is applied
+            });
+
+        res.status(200).send(transactions);
+    });
+});
+
+
 // Export the router
 module.exports = router;

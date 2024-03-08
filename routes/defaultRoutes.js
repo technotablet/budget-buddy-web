@@ -5,7 +5,9 @@ const { requiresAuth } = require('express-openid-connect');
 
 // req.isAuthenticated is provided from the auth router
 router.get('/', (req, res) => {
-    res.render('index', { title: "Dashboard", isAuthenticated: req.oidc.isAuthenticated(), user: req.oidc.user });
+    let accessToken = req.oidc.accessToken;
+    accessToken = accessToken.access_token;
+    res.render('index', { title: "Dashboard", accessToken: accessToken, isAuthenticated: req.oidc.isAuthenticated(), user: req.oidc.user });
 });
 
 router.get('/profile', requiresAuth(), (req, res) => {

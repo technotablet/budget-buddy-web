@@ -4,4 +4,96 @@ block content
   h2 Dashboard
   if isAuthenticated 
     a(href="/add") Add Transaction 
-    p stuff
+
+    h3 List of Transactions
+
+    //- Filter form
+    form#filterForm(method="get")
+      div Filter:
+      select(name="month" id="month")
+        option(value="") -- Any Month --
+        option(value="1") January
+        option(value="2") February
+        option(value="3") March
+        option(value="4") April
+        option(value="5") May
+        option(value="6") June
+        option(value="7") July
+        option(value="8") August
+        option(value="9") September
+        option(value="10") October
+        option(value="11") November
+        option(value="12") December
+      span  • 
+      select(name="type" id="type")
+        option(value="") -- Any Type --
+        option(value="income") Income
+        option(value="expense") Expense
+      span  • 
+      button(type="submit") Apply Filters
+
+    hr(size=1,noshade=true)
+    //- Placeholder where transactions will be appended
+    table#transactionsTable(border=1,cellpadding=5,cellspacing=0)
+      thead
+        tr
+          th #
+          th Date
+          th Type 
+          th Amount 
+          th Note
+      tbody
+
+    //- Client-side script to fetch and display transactions
+    script.
+      document.addEventListener('DOMContentLoaded', function() {
+        const fetchAndDisplayTransactions = () => {
+          const month = document.querySelector('#month').value;
+          const type = document.querySelector('#type').value;
+          const queryString = new URLSearchParams({ month, type }).toString();
+          fetch('/api/transactions/list?' + queryString, {
+            method: 'GET',
+            headers: {
+              'Authorization': 'Bearer ' + '#{accessToken}', // Use the accessToken from server-side
+              'Content-Type': 'application/json'
+            },
+          })
+          .then(response => response.json())
+          .then(data => {
+            const transactionsTableBody = document.querySelector('#transactionsTable tbody');
+            transactionsTableBody.innerHTML = ''; // Clear previous results
+
+            let row;
+            if (data.length == 0) { 
+              row = transactionsTableBody.insertRow();
+              let cell1 = row.insertCell(0);
+              cell1.textContent = "No Records Found";
+              cell1.colSpan = 5;
+            };
+
+
+            data.forEach((transaction, index) => {
+              row = transactionsTableBody.insertRow();
+              const date = new Date(transaction.timestamp).toLocaleString("en-GB", { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit', hour12: false });
+
+              // Insert cells (`td`) and text for each transaction detail
+              row.insertCell(0).textContent = index + 1; // Serial No.
+              row.insertCell(1).textContent = date; // Date
+              row.insertCell(2).textContent = transaction.type; // Type
+              row.insertCell(3).textContent = transaction.amount; // Amount
+              row.insertCell(4).textContent = transaction.note; // Note
+            });
+          })
+          .catch(error => console.error('Error fetching transactions:', error));
+        };
+
+        // Fetch and display transactions on page load
+        fetchAndDisplayTransactions();
+
+        // Set up the filter form to fetch and display transactions on submit
+        const form = document.querySelector('#filterForm');
+        form.addEventListener('submit', function(e) {
+          e.preventDefault();
+          fetchAndDisplayTransactions(); // Call the function again after form submission
+        });
+      });

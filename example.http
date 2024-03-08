@@ -5,12 +5,7 @@ Authorization: Bearer {{ACCESS_TOKEN}}
 
 ###
 
-POST http://localhost:3000/api/transactions/add
+GET http://localhost:3000/api/transactions/list?type=income
 Authorization: Bearer {{ACCESS_TOKEN}}
 Content-Type: application/json
 
-{
-    "type": "expense",
-    "amount": 500,
-    "note": "random super stuff"
-}
