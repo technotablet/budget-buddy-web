@@ -29,7 +29,7 @@ const config = {
   // Ensure scopes include openid at a minimum and any other required scopes
   authorizationParams: {
     response_type: 'code',
-    scope: 'openid profile email',
+    scope: 'openid profile email offline_access',
     audience: "http://localhost:3000/*"
   },
 };
